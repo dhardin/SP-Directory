@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <!--Third Party Stylesheets-->
+    <link rel="stylesheet" href="css\style.css" />
+
+    <!--Our Stylesheets-->
+
+    <!--Third Party Javascript-->
+    <script src="js\jquery-1.11.0.min.js"></script>
+    <script src="js\jstree.js"></script>
+    <!--Our Javascript-->
+    <script src="js\spdirectory.js"></script>
+
+  
+</head>
+<body>
+    <h1>Site Directory</h1>
+    <div id="spdir"></div>
+    <script>
+        //load the Google orgchart package
+        $(document).ready(function () {
+            spdirectory.initModule($('#spdir'), { url: 'https://members.lcmp.csd.disa.mil/sites/JLTV/' });
+        });
+    </script>
+</body>
+</html>

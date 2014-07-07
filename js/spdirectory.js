@@ -48,8 +48,8 @@ var spdirectory = (function () {
     //----------------- END MODULE SCOPE VARIABLES ---------------
     //----------------- BEGIN UTILITY METHODS --------------------
 
-    getWebs = function (url, $target, isRecursive, callback) {
-        var webArr = [],
+    getWebs = function (url, $target, callback) {
+        var results = [],
             
         // Create the SOAP request
          soapEnv =
@@ -73,11 +73,11 @@ var spdirectory = (function () {
 
                     title = $this.title;
                     url = $this.getAttribute('url');
-                    webArr.push({ title: title, url: url });
+                    results.push({ title: title, url: url });
                 });
-                processResult(webArr, $target, isRecursive, callback);
+
                 if (callback) {
-                    callback();
+                    callback(results, $target);
                 }
             },
             contentType: "text/xml; charset=\"utf-8\""
@@ -96,28 +96,31 @@ var spdirectory = (function () {
         console.log(XMLHttpRequest.responseText);
     };
 
-    processResult = function (arr, $target, options, isRecursive, callback) {
-        var i,
-            targetTitle = options.targetTitle || "",
-            targetUrl = options.targetUrl || "",
-            targetIcon = options.targetIcon || "";
-
-
-        if (arr.length == 0) {
-            return;
+    processResult = function (arr, $target) {
+        var i;
+        //var i,
+        //    targetTitle = options.targetTitle || "",
+        //    targetUrl = options.targetUrl || "",
+        //    targetIcon = options.targetIcon || "";
+        if (arr.length == 0 && $target.find('ul')) {
+            $target.find('ul').remove();
         }
 
         for (i = 0; i < arr.length; i++){
-            var $listItem = $(configMap.tree_item_map.child);
+            var $listItem = $(configMap.tree_item_map.child),
+                $childList = $('<ul/>');
+
+            $childList.appendTo($listItem);
 
             $listItem.find('a').text(arr[i].title);
             $listItem.find('a').attr('href', arr[i].url); 
             $listItem.attr('data-jstree', configMap.data_tree_map.page);
             $listItem.appendTo($target);
+            
 
-            if (isRecursive) {
-                getWebs(url, $listItem, isRecursive, callback)
-            }
+            getWebs(arr[i].url, $childList, function (results, $targetList) {
+                processResult(results, $targetList);
+            });
         }
     };
     //----------------- END UTILITY METHODS ----------------------
@@ -154,8 +157,8 @@ var spdirectory = (function () {
         stateMap.$container = $container;
 
         setJqueryMap();
-        getWebs(settings_map.url, jqueryMap.$treeTop, isRecursive, function () {
-            jqueryMap.$container.jstree();
+        getWebs(settings_map.url, jqueryMap.$treeTop, function (results, $target) {
+            processResult(results, $target);
         });
 
         //initiate tree

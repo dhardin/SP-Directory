@@ -46,7 +46,8 @@ var spdirectory = (function () {
             url: ""
         },
         stateMap = {
-            $container: null
+            $container: null,
+            itemsLeft: 0
         },
         jqueryMap = {},
         
@@ -145,6 +146,9 @@ var spdirectory = (function () {
             else {
                 $target.find('.parentList').remove();
             }
+            if (stateMap.itemsLeft == 0) {
+                jqueryMap.$container.jstree();
+            }
         }
 
         for (i = 0; i < arr.length; i++){
@@ -152,6 +156,7 @@ var spdirectory = (function () {
                 $pageChildList = $(configMap.tree_item_map.pageParentList),
                 $listChildList = $(configMap.tree_item_map.listParentList);
 
+           
            
 
             $listItem.find('a').text(arr[i].title);
@@ -166,12 +171,14 @@ var spdirectory = (function () {
             if (type == 'web') {
                 $pageChildList.appendTo($listItem);
                 $listChildList.appendTo($listItem);
+                stateMap.itemsLeft++;
 
                 getLists(arr[i].url, $listChildList.find('.lists'), function (results, $targetList) {
                     processResult(results, $targetList, 'list');
                 });
 
                 getWebs(arr[i].url, $pageChildList.find('.pages'), function (results, $targetList) {
+                    stateMap.itemsLeft--;
                     processResult(results, $targetList, 'web');
                
                 });

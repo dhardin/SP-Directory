@@ -15,7 +15,7 @@ var spdirectory = (function () {
     //----------------- BEGIN MODULE SCOPE VARIABLES ---------------
     var
         configMap = {
-            main_html: '<ul class="sp-dir"><li data-jstree="{icon:"images/home.png", opened:true}"><a href="#">Home</a><ul class="tree-top"></ul></li></ul>',
+            main_html: '<ul class="sp-dir"><li data-jstree=\'{"icon":"images/home.png", "opened":true}\'><a href="#">Home</a><ul class="tree-top"></ul></li></ul>',
             settings_map : {
                 url: true
             },
@@ -37,9 +37,9 @@ var spdirectory = (function () {
                 child: '<li><a></a></li>'
             },
             data_tree_map : {//data-jstree=
-                home: '{ icon:"images/home.png" }',
-                page: '{ icon:"images/tree.png" }',
-                list: '{ icon:"images/list.png" }'
+                home: '{ "icon":"images/home.png" }',
+                page: '{ "icon":"images/tree.png" }',
+                list: '{ "icon":"images/list.png" }'
             }
         },
         settings_map = {
@@ -140,12 +140,8 @@ var spdirectory = (function () {
         //    targetUrl = options.targetUrl || "",
         //    targetIcon = options.targetIcon || "";
         if (arr.length == 0 && $target.find('ul')) {
-            if (type == 'list') {
-                $target.find('.parentPage').remove();
-            }
-            else {
-                $target.find('.parentList').remove();
-            }
+            $target.parent().parent().remove();
+          
             if (stateMap.itemsLeft == 0) {
                 jqueryMap.$container.jstree();
             }

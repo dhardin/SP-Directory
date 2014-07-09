@@ -15,7 +15,7 @@ var spdirectory = (function () {
     //----------------- BEGIN MODULE SCOPE VARIABLES ---------------
     var
         configMap = {
-            main_html: '<div class="sp-dir-container"><ul class="sp-dir"><li data-jstree=\'{"icon":"images/home.png", "opened":true}\'><a href="#">Home</a><ul class="tree-top"></ul></li></ul></div>',
+            main_html: '<div class="sp-dir-container blur"><div class="renderMessage"><h2>Generating Directory</h2><em>Please Wait....</em></div><ul class="sp-dir"><li data-jstree=\'{"icon":"images/home.png", "opened":true}\'><a href="#">Home</a><ul class="tree-top"></ul></li></ul></div>',
             settings_map : {
                 url: true
             },
@@ -143,7 +143,12 @@ var spdirectory = (function () {
             $target.parent().parent().remove();
           
             if (stateMap.itemsLeft == 0) {
+               
+              
                 jqueryMap.$treeContainer.jstree();
+           
+               
+                
             }
         }
 
@@ -193,7 +198,8 @@ var spdirectory = (function () {
             $container: $container,
             $treeContainer: $container.find('.sp-dir-container'),
             $tree: $container.find('.sp-dir'),
-            $treeTop: $container.find('.tree-top')
+            $treeTop: $container.find('.tree-top'),
+            $renderMsg: $container.find('.renderMessage')
         };
     };
     // End DOM method /setJqueryMap/
@@ -218,7 +224,7 @@ var spdirectory = (function () {
       
 
         setJqueryMap();
-        jqueryMap.$container.addClass('blur');
+      
         getWebs(settings_map.url, jqueryMap.$treeTop, function (results, $target) {
             processResult(results, $target, 'web');
         });
@@ -239,7 +245,7 @@ var spdirectory = (function () {
                }
            })
            .on('loaded.jstree', function (e, data) {
-                  jqueryMap.$container.removeClass('blur');
+               jqueryMap.$treeContainer.css({ 'filter': '' });      
            });
     };
     return { initModule: initModule };

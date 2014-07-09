@@ -958,3 +958,13 @@
     -ms-filter: 'blur(25px)';
     filter:blur(25px);
 }
+.renderMessage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    overflow: hidden;
+    float: left;
+    border: 1px solid #222;
+    padding: 20px;
+}

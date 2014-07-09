@@ -15,4 +15,6 @@ Procedurally generates a nested site directory for a SharePoint site.
 ```
 
 ##Options
-- url: URL of top level SharePoint site.  
+- url: 
+  - Type: String
+  - Description: URL of SharePoint site that you want to make a procedurally generated site directory of.

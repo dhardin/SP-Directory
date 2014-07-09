@@ -15,7 +15,7 @@ var spdirectory = (function () {
     //----------------- BEGIN MODULE SCOPE VARIABLES ---------------
     var
         configMap = {
-            main_html: '<ul class="sp-dir"><li data-jstree=\'{"icon":"images/home.png", "opened":true}\'><a href="#">Home</a><ul class="tree-top"></ul></li></ul>',
+            main_html: '<div class="sp-dir-container"><ul class="sp-dir"><li data-jstree=\'{"icon":"images/home.png", "opened":true}\'><a href="#">Home</a><ul class="tree-top"></ul></li></ul></div>',
             settings_map : {
                 url: true
             },
@@ -143,7 +143,7 @@ var spdirectory = (function () {
             $target.parent().parent().remove();
           
             if (stateMap.itemsLeft == 0) {
-                jqueryMap.$container.jstree();
+                jqueryMap.$treeContainer.jstree();
             }
         }
 
@@ -191,6 +191,7 @@ var spdirectory = (function () {
         
         jqueryMap = {
             $container: $container,
+            $treeContainer: $container.find('.sp-dir-container'),
             $tree: $container.find('.sp-dir'),
             $treeTop: $container.find('.tree-top')
         };
@@ -214,8 +215,10 @@ var spdirectory = (function () {
 
         $tree.appendTo($container);
         stateMap.$container = $container;
+      
 
         setJqueryMap();
+        jqueryMap.$container.addClass('blur');
         getWebs(settings_map.url, jqueryMap.$treeTop, function (results, $target) {
             processResult(results, $target, 'web');
         });
@@ -224,7 +227,7 @@ var spdirectory = (function () {
         //setTimeout(function () {
         //    jqueryMap.$container.jstree();
         //}, 10000);
-        jqueryMap.$tree
+        jqueryMap.$treeContainer
            // listen for event
            .on('changed.jstree', function (e, data) {
                var i, j, r = [], href, text;
@@ -234,6 +237,9 @@ var spdirectory = (function () {
                if (href != '#') {
                    window.open(href);
                }
+           })
+           .on('loaded.jstree', function (e, data) {
+                  jqueryMap.$container.removeClass('blur');
            });
     };
     return { initModule: initModule };

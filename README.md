@@ -6,7 +6,7 @@ Procedurally generates a nested site directory for a SharePoint site.
 ##Usage
 ###
 
-```
+```HTML
 <div id="spdir></div>
 
 <script type="text/javascript">

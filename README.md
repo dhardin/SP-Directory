@@ -28,9 +28,7 @@ All files must be placed on the same domain as your SharePoint site to avoid err
     - options : Object containing the various options you wish to pass to initModule.
 
 ##Options
-- url: 
-  - Type: String
-  - Description: URL of SharePoint site that you want to make a procedurally generated site directory of.
-- jstree:
-  - Type: Boolean
-  - Description: Specifies whether or not you wish to call the [jsTree](http://www.jstree.com) plugin on your directory after it has been constructed. 
+| Property      |      Type     | Description  |
+| ------------- | ------------- | ------------ | 
+|      url      | String        | URL of SharePoint site that you want to make a procedurally generated site directory of. |
+| jstree        | Boolean       | Specifies whether or not you wish to call the [jsTree](http://www.jstree.com) plugin on your directory after it has been constructed. |

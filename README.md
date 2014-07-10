@@ -17,6 +17,16 @@ All files must be placed on the same domain as your SharePoint site to avoid err
 </script>
 ```
 
+##Variables
+-spdirectory
+  - Description: Module namespace.  You must use this variable to configure and initialize the directory module.
+
+##Methods
+-initModule
+  - Parameters
+    - $target : Target DOM element that you wish to call initModule on.
+    - options : Object containing the various options you wish to pass to initModule.
+
 ##Options
 - url: 
   - Type: String

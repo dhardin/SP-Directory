@@ -15,7 +15,7 @@ var spdirectory = (function () {
     //----------------- BEGIN MODULE SCOPE VARIABLES ---------------
     var
         configMap = {
-            main_html: '<div class="sp-dir-container blur"><div class="renderMessage"><h2>Generating Directory</h2><em>Please Wait....</em></div><ul class="sp-dir"><li data-jstree=\'{"icon":"images/home.png", "opened":true}\'><a href="#">Home</a><ul class="tree-top"></ul></li></ul></div>',
+            main_html: '<div class="sp-dir-container"><div class="renderMessage"><h2>Generating Directory</h2><em>Please Wait....</em></div><ul class="sp-dir"><li data-jstree=\'{"icon":"images/home.png", "opened":true}\'><a href="#">Home</a><ul class="tree-top"></ul></li></ul></div>',
             settings_map : {
                 url: true
             },
@@ -43,7 +43,8 @@ var spdirectory = (function () {
             }
         },
         settings_map = {
-            url: ""
+            url: "",
+            jstree: false
         },
         stateMap = {
             $container: null,
@@ -55,7 +56,7 @@ var spdirectory = (function () {
 
     //----------------- END MODULE SCOPE VARIABLES ---------------
     //----------------- BEGIN UTILITY METHODS --------------------
-
+    // Begin Utility Method /getWebs/
     getWebs = function (url, $target, callback) {
         var results = [],
             
@@ -91,7 +92,9 @@ var spdirectory = (function () {
             contentType: "text/xml; charset=\"utf-8\""
         });
     };
+    // End Utility Method /getWebs/
 
+    // Begin Utility Method /getLists/
     getLists = function (url, $target, callback) {
         var results = [],
 
@@ -127,32 +130,32 @@ var spdirectory = (function () {
             contentType: "text/xml; charset=\"utf-8\""
         });
     };
+    // End Utility Method /getLists/
 
+    // Begin Utility Method /printError/
     printError = function (XMLHttpRequest, textStatus, errorThrown) {
         console.log("There was an error: " + errorThrown + " " + textStatus);
         console.log(XMLHttpRequest.responseText);
     };
+    // End Utility Method /printError/
 
+    // Begin Utility Method /processResult/
     processResult = function (arr, $target, type) {
         var i;
-        //var i,
-        //    targetTitle = options.targetTitle || "",
-        //    targetUrl = options.targetUrl || "",
-        //    targetIcon = options.targetIcon || "";
+
         if (arr.length == 0 && $target.find('ul')) {
-            $target.parent().parent().remove();
+           // $target.parent().parent().remove();
           
+            //check to see if there are any items still querying for data from server
             if (stateMap.itemsLeft == 0) {
-               
-              
-                jqueryMap.$treeContainer.jstree();
-           
-               
-                
+                //all items have finished queries, genenerate jstree
+                if (settings_map.jstree){
+                    jqueryMap.$treeContainer.jstree();
+                }
             }
         }
 
-        for (i = 0; i < arr.length; i++){
+        for (i = 0; i < arr.length; i++) {
             var $listItem = $(configMap.tree_item_map.child),
                 $pageChildList = $(configMap.tree_item_map.pageParentList),
                 $listChildList = $(configMap.tree_item_map.listParentList);
@@ -161,7 +164,8 @@ var spdirectory = (function () {
            
 
             $listItem.find('a').text(arr[i].title);
-            $listItem.find('a').attr('href', arr[i].url);
+            
+            $listItem.find('a').attr('href', type == 'web' ? arr[i].url : settings_map.url + arr[i].url);
            
             $listItem.attr('data-jstree', arr[i].type == 'web' ? configMap.data_tree_map.page : configMap.data_tree_map.list);
             $listItem.appendTo($target);
@@ -170,6 +174,7 @@ var spdirectory = (function () {
            
 
             if (type == 'web') {
+                
                 $pageChildList.appendTo($listItem);
                 $listChildList.appendTo($listItem);
                 stateMap.itemsLeft++;
@@ -186,6 +191,7 @@ var spdirectory = (function () {
             }
         }
     };
+    // End Utility Method /processResult/
 
     //----------------- END UTILITY METHODS ----------------------
     //--------------------- BEGIN DOM METHODS --------------------
@@ -204,24 +210,20 @@ var spdirectory = (function () {
     };
     // End DOM method /setJqueryMap/
 
-    populateTree = function (data) {
-
-    };
     //--------------------- END DOM METHODS --------------------
 
     initModule = function ($container, options) {
-        var $tree = $(configMap.main_html),
-            isRecursive = true;
+        var $tree = $(configMap.main_html);
 
-        if (options.url) {
-            settings_map.url = options.url;
-        } else {
+        settings_map.url = options.url || "";
+        settings_map.jstree = options.jstree || false;
+
+        if (settings_map.url.length == 0) {
             return;
         }
 
         $tree.appendTo($container);
         stateMap.$container = $container;
-      
 
         setJqueryMap();
       
@@ -229,24 +231,23 @@ var spdirectory = (function () {
             processResult(results, $target, 'web');
         });
 
-        //initiate tree
-        //setTimeout(function () {
-        //    jqueryMap.$container.jstree();
-        //}, 10000);
-        jqueryMap.$treeContainer
-           // listen for event
-           .on('changed.jstree', function (e, data) {
-               var i, j, r = [], href, text;
-               for (i = 0, j = data.selected.length; i < j; i++) {
-                   href = data.instance.get_node(data.selected[i])['a_attr'].href;
-               }
-               if (href != '#') {
-                   window.open(href);
-               }
-           })
-           .on('loaded.jstree', function (e, data) {
-               jqueryMap.$treeContainer.css({ 'filter': '' });      
-           });
+        if(settings_map.jstree){
+            jqueryMap.$treeContainer
+               .on('changed.jstree', function (e, data) {
+                   //get url for item clicked and open it in new window if
+                   //it has a valid url
+                   var i, j, r = [], href, text;
+                   for (i = 0, j = data.selected.length; i < j; i++) {
+                       href = data.instance.get_node(data.selected[i])['a_attr'].href;
+                   }
+                   if (href != '#') {
+                       window.open(href);
+                   }
+               })
+               .on('loaded.jstree', function (e, data) {
+               
+               });
+        }
     };
     return { initModule: initModule };
 }());

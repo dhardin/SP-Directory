@@ -31,3 +31,6 @@ All files must be placed on the same domain as your SharePoint site to avoid err
 - url: 
   - Type: String
   - Description: URL of SharePoint site that you want to make a procedurally generated site directory of.
+- jstree:
+  - Type: Boolean
+  - Description: Specifies whether or not you wish to call the jsTree ([Visit jsTree!](wwww.jstree.com)) plugin on your directory after it has been constructed. 

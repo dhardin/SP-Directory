@@ -4,8 +4,11 @@
 Procedurally generates a nested site directory for a SharePoint site.
 
 ##Usage
-###
+============
+###Installation
+All files must be placed on the same domain as your SharePoint site to avoid errors associated with cross-domain scripting.
 
+###Markup & Initialization
 ```HTML
 <div id="spdir></div>
 

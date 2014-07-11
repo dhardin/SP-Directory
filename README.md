@@ -10,7 +10,7 @@ All files must be placed on the same domain as your SharePoint site to avoid err
 
 ###Markup & Initialization
 ```HTML
-<div id="spdir></div>
+<div id="spdir"></div>
 
 <script type="text/javascript">
   spdirectory.initModule($('#spdir'), {url: 'top level site url goes here'});
